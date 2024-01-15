@@ -1,0 +1,18 @@
+https://currencylayer.com/documentation
+
+http://apilayer.net/api/live
+   ?access_key=APIKEY
+   &currencies=USD,EUR,GBP
+   &source=RUB
+   &format=1
+
+//free
+http://api.currencylayer.com/live?access_key=APIKEY
+http://api.currencylayer.com/live?access_key=APIKEY&currencies=RUB,USD,EUR,GBP&format=1
+http://apilayer.net/api/live?access_key=APIKEY&currencies=RUB,EUR,GBP&source=USD&format=1
+http://apilayer.net/api/live?access_key=APIKEY&currencies=RUB,USD,GBP&source=EUR&format=1
+http://apilayer.net/api/live?access_key=APIKEY&currencies=USD,EUR,GBP,KZT,CNY&source=RUB&format=1
+
+//advanced plans
+https://api.currencylayer.com/convert?access_key=APIKEY&from=USD&to=RUB&amount=1000
+https://api.currencylayer.com/timeframe?access_key=APIKEY&currencies =USD,GBP,EUR&start_date=2010-03-01&end_date=2010-04-01
