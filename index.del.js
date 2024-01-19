@@ -1,11 +1,3 @@
-require("dotenv").config();
-const { Telegraf, Markup } = require('telegraf');
-
-
-//use your telegram apikey (from @botfather) on .env or Here:
-const bot = new Telegraf(process.env.BOT_API_KEY);
-
-
 
 const cbrfRates = {};
 const cbrfInflation = {};
@@ -148,13 +140,4 @@ function getBaseInflationReply(obj){
 }
 */
 
-bot.launch()
-    .then((result) => {
-        console.log('Bot started');
-    })
-    .catch((error) => console.error("bot.launch() .catch ERROR: ", error));
-
-// Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
