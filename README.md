@@ -1,6 +1,8 @@
 #telegram-bot-economic
+#17.01  code refactor begin
 
-Can test @ecomomic_rubot on telegram after deploy or run it yourself
+
+Can test @ecomomic_rubot on telegram after deploy or run it yourself (commit a9d4e57)
 
 Telegram_bot_name: Breaf Economic RU
 
@@ -9,10 +11,10 @@ Telegram_link: https://t.me/economic_rubot
 
 used:
 - NodeJS, telegraf, jsdom, axios
-- parse html (cbr.ru) to get statistic
+- parse html (cbr.ru) to get statistic (need impl. universal parser);
 
 api:
-- currencylayer.com to get currency rates (free plan, 1000/month)
+- /DEPRICATED new limit 100/mo, need impl apikey-toggle/ currencylayer.com to get currency rates (~~1000/mo~~)
 - https://www.cbr-xml-daily.ru/ to get currency rates from CBRF (10k/day)
 
 need code refactor

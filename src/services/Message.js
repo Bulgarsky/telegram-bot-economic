@@ -1,5 +1,6 @@
 let service = {};
 
+//сообщение - ключевая ставка
 service.CbrfBaseRates = (obj) => {
     let msg = "Ключевая ставка Банка России \n " +
         "https://cbr.ru/hd_base/infl/ \n \n" +
@@ -9,7 +10,7 @@ service.CbrfBaseRates = (obj) => {
     }
     return msg;
 }
-
+//сообщение - инфляция
 service.CbrfBaseInflation = (obj) => {
     let msg = "ЦБ РФ. Инфляция в % год-к-году \n " +
         "https://cbr.ru/hd_base/infl/ \n \n" +
@@ -20,20 +21,22 @@ service.CbrfBaseInflation = (obj) => {
     return msg;
 }
 
+//сообщение - руониа
 service.CbrfRuonia = (obj) => {
     let msg = "Ставка RUONIA \n " +
         "https://cbr.ru/hd_base/ruonia/ \n \n";
     for (let key in obj) {
         msg += `${obj[key].title}, \t \t \t ${obj[key].value2} \n`;
     }
-    msg += "\n \n "
+    msg += "\n \n ";
     for (let key in obj) {
         msg += `${obj[key].title}, \t \t \t ${obj[key].value1} \n `;
     }
     return msg;
 }
 
-service.RateByWeekly = (obj) => {
+//сообщение - ключевая ставка по недельно
+service.CbrfRatePerWeek = (obj) => {
     let msg = "Еженедельная ключевая ставка Банка России \n " +
         "https://cbr.ru/hd_base/KeyRate/ \n \n" +
         "Дата \n";
@@ -43,7 +46,8 @@ service.RateByWeekly = (obj) => {
     return msg;
 }
 
-service.CurrencyRates = (obj, date, title) => {
+//сообщение - курс валют (для cbrfDaily)
+service.CurrencyRatesFromXML = (obj, date, title) => {
     let msg = title + " на " + date + ": \n \n";
 
     for (let key in obj) {
