@@ -1,11 +1,10 @@
 {
   "name": "economic-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Brief economic bot - get statistics, rates & etc",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "node": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,8 +13,8 @@
   "dependencies": {
     "axios": "^1.6.5",
     "dotenv": "^16.3.1",
-    "jsdom": "^23.2.0",
     "nodemon": "^3.0.2",
+    "jsdom": "^23.2.0",
     "telegraf": "^4.15.3"
   }
 }
