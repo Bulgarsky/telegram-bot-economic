@@ -1,19 +1,7 @@
-//
 //DEPRECATED. NOW ONLY 100/month
+//need implement apikey-toggle function
 //
-//need add key-toggle
-//
-//response from api after limit down
-/*
- {
-     success: false,
-     error: {
-         code: 104,
-         info: 'Your monthly usage limit has been reached. Please upgrade your Subscription Plan.'
-     }
- }
 
- */
 const axios = require("axios");
 const Helpers = require("../services/Helpers.js");
 
@@ -99,10 +87,20 @@ service.getData = async () => {
         return ApiResponse;
     }
 
+    /*
+    //response with error (code 104)
+    //response from api after limit down
+         {
+             success: false,
+             error: {
+             code: 104,
+             info: 'Your monthly usage limit has been reached. Please upgrade your Subscription Plan.'
+         }
+     */
 }
 
-
 //toggle
+//Can't implement cause api account must have a payment card (card of NON-Russian Banks)
 service.ApiKeyToggle = () => {}
 
 module.exports = service;

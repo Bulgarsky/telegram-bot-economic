@@ -3,7 +3,6 @@ const axios = require("axios");
 let service = {};
 
 const cbrfUrl = "https://www.cbr-xml-daily.ru/daily_json.js";
-
 let cbrfDailyData = {};
 
 service.fetchData = async () => {
@@ -20,7 +19,7 @@ service.fetchData = async () => {
             }
 
         }).catch((error) => {
-            console.log("axios.get ERROR: ", error);
+            console.log("XML / axios.get / catch ERROR: ", error);
         });
 
     return cbrfDailyData;

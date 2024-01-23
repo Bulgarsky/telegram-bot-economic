@@ -4,20 +4,20 @@ const Helpers = require('./Helpers.js');
 
 let service = {};
 
-//
+//const
 const cbrfWeeklyRate = {};
 const cbrfRateByMonth = {};
 const cbrfInflation = {}
 const fullRuonia= {};
 const shortRuonia = {};
 
-
 //urls
 const BasesURL = "https://cbr.ru/hd_base/infl/"; //inflation, rates by month
 const RuoniaURL = "https://cbr.ru/hd_base/ruonia/"; //Ruonia
 const RatePerWeekURL = "https://cbr.ru/hd_base/KeyRate/"; // rate per week (daily)
 
-//parse html and get table
+//parse html and get table:HTMLTableElement
+//table.rows: HRMLCollectionOf<HTMLTableRowElement>
 const getTableFromHTML = async (url) => {
     return await axios.get(url)
         .then(response => response.data)
@@ -42,7 +42,6 @@ service.CbrfRateForWeekByDay = async () => {
             rate
         }
     }
-
     return cbrfWeeklyRate;
 }
 
@@ -156,8 +155,6 @@ const getBases = async (type) => {
         }
 
     }
-    // console.log("cbrfInflation: ", cbrfInflation); //+
-  //  console.log("cbrfRateByMonth: ", cbrfRateByMonth); //+
 
 }
 
