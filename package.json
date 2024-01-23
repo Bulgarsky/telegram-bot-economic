@@ -2,9 +2,9 @@
   "name": "economic-bot",
   "version": "1.0.1",
   "description": "Brief economic bot - get statistics, rates & etc",
-  "main": "index.new.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.new.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
