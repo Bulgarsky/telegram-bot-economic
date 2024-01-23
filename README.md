@@ -2,7 +2,7 @@
 #17.01  code refactor begin
 
 
-Can test @ecomomic_rubot on telegram after deploy or run it yourself (commit a9d4e57)
+Can test @ecomomic_rubot on telegram after deploy or run it yourself 
 
 Telegram_bot_name: Breaf Economic RU
 
