@@ -23,20 +23,20 @@ service.CbrfInflationByMonth = (obj) => {
 
 //сообщение: руониа
 service.CbrfRuonia = (obj) => {
-    let msg = "Ставка RUONIA \n " +
-        "https://cbr.ru/hd_base/ruonia/ \n \n";
+    let msg = "Ставка RUONIA \n\n ";
     for (let key in obj) {
         msg += `${obj[key].title}, \t \t \t ${obj[key].value2} \n`;
     }
-    msg += "\n \n ";
+    msg += "\n";
     for (let key in obj) {
         msg += `${obj[key].title}, \t \t \t ${obj[key].value1} \n `;
     }
+    msg += "\n\nhttps://cbr.ru/hd_base/ruonia/ ";
     return msg;
 }
 
-//сообщение: - ключевая ставка/неделя
-service.CbrfRateForWeekByDay = (obj) => {
+//сообщение: ключевая ставка на неделю по дням
+service.RateForWeekByDay = (obj) => {
     let msg = "Ключевая ставка Банка России на неделю (по дням)\n " +
         "https://cbr.ru/hd_base/KeyRate/ \n \n" +
         "Дата \n";

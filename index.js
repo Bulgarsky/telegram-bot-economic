@@ -85,8 +85,8 @@ bot.hears('Вся валюта', async(context) => {
 
 //+
 bot.hears('Ставка по дням', async (context) => {
-    let obj = await dataService.getCbrfRateForWeekByDay();
-    let msg = Message.CbrfRateForWeekByDay(obj);
+    let obj = await dataService.CbrfRateForWeekByDay();
+    let msg = Message.RateForWeekByDay(obj);
     context.reply(msg);
 });
 //
@@ -157,6 +157,14 @@ bot.hears('BRENT', (context) => {
 bot.hears('proFinance.ru', (context) => {
     context.reply("Пых пых пых пух пых. Пук. Тыдыщ. ФФффффшшшшшшш...");
     context.reply("https://www.profinance.ru/quotes/");
+});
+
+
+//
+bot.hears('test', async (context) => {
+    await dataService.TEST();
+    context.reply("test");
+
 });
 
 bot.launch()

@@ -1,7 +1,7 @@
 const APILayer = require('../api/apilayer.api.js');
 const XmlDailyCurrency = require('../api/cbrfdaily.xml.js');
 const HTMLParser = require('./html.parser.js');
-const HtmlParser = require("./html.parser");
+
 
 let service = {};
 
@@ -45,7 +45,7 @@ service.getCurrencyFromApi = async () => {
 }
 
 service.getCbrfRateByMonth = async  () => {
-    return await HTMLParser.Bases("monthRate");
+    return await HTMLParser.Bases("RateByMonth");
 }
 
 service.getCbrfInflationByMonth = async  () => {
@@ -59,8 +59,8 @@ service.getRuoniaFull = async  () => {
     return await HTMLParser.Ruonia("full");
 }
 
-service.getCbrfRateForWeekByDay = async () => {
-    return await HtmlParser.CbrfRatePerWeek();
+service.CbrfRateForWeekByDay = async () => {
+    return await HTMLParser.CbrfRateForWeekByDay();
 }
 
 module.exports = service;

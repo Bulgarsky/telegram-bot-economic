@@ -12,40 +12,49 @@ const fullRuonia= {};
 const shortRuonia = {};
 
 
-//PARSE: rate by week
-service.CbrfRatePerWeek = async () => {
-    await axios.get("https://cbr.ru/hd_base/KeyRate/")
+//urls
+const BasesURL = "https://cbr.ru/hd_base/infl/"; //inflation, rates by month
+const RuoniaURL = "https://cbr.ru/hd_base/ruonia/"; //Ruonia
+const RatePerWeekURL = "https://cbr.ru/hd_base/KeyRate/"; // rate per week (daily)
+
+//parse html and get table
+const getTableFromHTML = async (url) => {
+    return await axios.get(url)
         .then(response => response.data)
         .then(data => {
             const dom = new JSDOM(data);
             const table = dom.window.document.getElementsByTagName("table")[0];
-
-            let rows = table.rows;
-
-            for (let i = 1; i < rows.length; i++) {
-                let row = rows[i];
-                let date = row.cells[0].textContent;
-                let rate = row.cells[1].textContent;
-                let rowName = "row" + i;
-                cbrfWeeklyRate[rowName] = {
-                    date,
-                    rate
-                }
-            }
-
+            return table.rows;
         });
+}
+
+//Cbrf: rate for week by day
+service.CbrfRateForWeekByDay = async () => {
+    let rows = await getTableFromHTML(RatePerWeekURL);
+
+    for (let i = 1; i < rows.length; i++) {
+        let row = rows[i];
+        let date = row.cells[0].textContent;
+        let rate = row.cells[1].textContent;
+        let rowName = "row" + i;
+        cbrfWeeklyRate[rowName] = {
+            date,
+            rate
+        }
+    }
 
     return cbrfWeeklyRate;
 }
 
-//Check ruonia +
+
+//Cbrf: RUONIA
 service.Ruonia = async (type) => {
     switch(type){
         case "full":
             if (!Helpers.isEmptyObject(fullRuonia)){
                 return fullRuonia;
             } else{
-                await parseRuonia();
+                await getRuonia();
                 return fullRuonia;
             }
 
@@ -53,49 +62,44 @@ service.Ruonia = async (type) => {
             if (!Helpers.isEmptyObject(shortRuonia)){
                 return shortRuonia;
             } else{
-                await parseRuonia();
+                await getRuonia();
                 return shortRuonia;
             }
     }
 
 }
 
-//RUONIA +
-const parseRuonia = async () => {
-    await axios.get("https://cbr.ru/hd_base/ruonia/")
-        .then(response => response.data)
-        .then(data => {
-            const dom = new JSDOM(data);
-            const table = dom.window.document.getElementsByTagName("table")[0];
-            let rows = table.rows;
+//getRuonia
+const getRuonia = async () => {
+    let rows = await getTableFromHTML(RuoniaURL);
+    for (let i = 0; i < (rows.length - 1); i++) {
+        let row = rows[i];
+        let rowName = "row" + (i+1);
 
-            for (let i = 0; i < (rows.length - 1); i++) {
-                let row = rows[i];
-                let title = row.cells[0].textContent.trim();
-                let value1 = row.cells[1].textContent;
-                let value2 = row.cells[2].textContent;
-                let rowName = "row" + i;
+        let title = row.cells[0].textContent.trim();
+        let value1 = row.cells[1].textContent;
+        let value2 = row.cells[2].textContent;
 
-                fullRuonia[rowName] = {
-                    title,
-                    value1,
-                    value2
-                }
+        fullRuonia[rowName] = {
+            title,
+            value1,
+            value2
+        }
 
-                if(i < 2){
-                    shortRuonia[rowName] = {
-                        title,
-                        value1,
-                        value2
-                    }
-                }
-
+        if(i < 2){
+            shortRuonia[rowName] = {
+                title,
+                value1,
+                value2
             }
-        });
+        }
+
+    }
+
 }
 
 
-//Bases: Inflation and Month rates
+//Cbrf Bases (switch): Inflation and Rates (Month)
 service.Bases = async (type) => {
 
     switch(type){
@@ -103,15 +107,15 @@ service.Bases = async (type) => {
             if (!Helpers.isEmptyObject(cbrfInflation)){
                 return cbrfInflation;
             } else{
-                await CbrfBases();
+                await getBases("inflation");
                 return cbrfInflation;
             }
 
-        case "monthRate":
+        case "RateByMonth":
             if (!Helpers.isEmptyObject(cbrfRateByMonth)){
                 return cbrfRateByMonth;
             } else{
-                await CbrfBases();
+                await getBases("RateByMonth");
                 return cbrfRateByMonth;
             }
 
@@ -119,38 +123,42 @@ service.Bases = async (type) => {
 
 }
 
-//PARSE: inflation and rate by month
-const CbrfBases = async () => {
+//getBases
+const getBases = async (type) => {
+    let rows = await getTableFromHTML(BasesURL);
 
-    await axios.get("https://cbr.ru/hd_base/infl/")
-        .then(response => response.data)
-        .then(data => {
-            const dom = new JSDOM(data);
-            const table = dom.window.document.getElementsByTagName("table")[0];
-            let rows = table.rows;
+    for (let i = 1; i < rows.length; i++) {
+        let row = rows[i]; // take current row
+        let rowName = "row" + i;
+        let date = row.cells[0].textContent; // cell[0] = date
 
-            for (let i = 1; i < rows.length; i++) {
-                let row = rows[i]; // take current row
-                let date = row.cells[0].textContent; // take value from cell 1
-                let cbrfRate = row.cells[1].textContent; // take value from cell 2
-                let inflationRate = row.cells[2].textContent // take value from cell 3
-                let inflationTarget = row.cells[3].textContent // take value from cell 4
-                let rowName = "row" + i;
-                //
+        switch(type){
+
+            case "RateByMonth":
+                let cbrfRate = row.cells[1].textContent; //cell[1] = bank rate
+
                 cbrfRateByMonth[rowName] = {
                     date,
                     cbrfRate
                 }
-                //
-                cbrfInflation[rowName] ={
+                break;
+
+            case "inflation":
+                let inflationRate = row.cells[2].textContent //cell[2] = inf rate
+                let inflationTarget = row.cells[3].textContent //cell[3] = inf target
+
+                cbrfInflation[rowName] = {
                     date,
                     inflationRate,
                     inflationTarget
                 }
+                break;
+        }
 
-            }
+    }
+    // console.log("cbrfInflation: ", cbrfInflation); //+
+  //  console.log("cbrfRateByMonth: ", cbrfRateByMonth); //+
 
-        });
 }
 
 module.exports = service;
