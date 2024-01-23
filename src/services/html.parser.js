@@ -1,18 +1,19 @@
 const axios = require("axios");
 const {JSDOM} = require("jsdom");
-
 const Helpers = require('./Helpers.js');
+
 let service = {};
 
 //
 const cbrfWeeklyRate = {};
+const cbrfRateByMonth = {};
+const cbrfInflation = {}
 const fullRuonia= {};
 const shortRuonia = {};
 
 
-//HTML parse cbr.ru/hd_base/KeyRate/
+//PARSE: rate by week
 service.CbrfRatePerWeek = async () => {
-    console.log("fetchCbrfBases()");
     await axios.get("https://cbr.ru/hd_base/KeyRate/")
         .then(response => response.data)
         .then(data => {
@@ -37,7 +38,7 @@ service.CbrfRatePerWeek = async () => {
     return cbrfWeeklyRate;
 }
 
-//Check ruonia
+//Check ruonia +
 service.Ruonia = async (type) => {
     switch(type){
         case "full":
@@ -59,7 +60,7 @@ service.Ruonia = async (type) => {
 
 }
 
-//RUONIA
+//RUONIA +
 const parseRuonia = async () => {
     await axios.get("https://cbr.ru/hd_base/ruonia/")
         .then(response => response.data)
@@ -93,35 +94,34 @@ const parseRuonia = async () => {
         });
 }
 
-/*
-//HTML parse cbr.ru/hd_base/KeyRate/
-async function fetchCbrfWeeklyKeyRate(){
-    console.log("fetchCbrfBases()");
-    await axios.get("https://cbr.ru/hd_base/KeyRate/")
-        .then(response => response.data)
-        .then(data => {
-            const dom = new JSDOM(data);
-            const table = dom.window.document.getElementsByTagName("table")[0];
 
-            let rows = table.rows;
+//Bases: Inflation and Month rates
+service.Bases = async (type) => {
 
-            for (let i = 1; i < rows.length; i++) {
-                let row = rows[i];
-                let date = row.cells[0].textContent;
-                let rate = row.cells[1].textContent;
-                let rowName = "row" + i;
-                cbrfWeeklyRate[rowName] = {
-                    date,
-                    rate
-                }
+    switch(type){
+        case "inflation":
+            if (!Helpers.isEmptyObject(cbrfInflation)){
+                return cbrfInflation;
+            } else{
+                await CbrfBases();
+                return cbrfInflation;
             }
-            //console.log("cbrfWeeklyRate: \n", cbrfWeeklyRate);
-        });
+
+        case "monthRate":
+            if (!Helpers.isEmptyObject(cbrfRateByMonth)){
+                return cbrfRateByMonth;
+            } else{
+                await CbrfBases();
+                return cbrfRateByMonth;
+            }
+
+    }
+
 }
 
-//HTML parsing cbr.ru/hd_base/infl/
-async function fetchCbrfBases(){
-    console.log("fetchCbrfBases()");
+//PARSE: inflation and rate by month
+const CbrfBases = async () => {
+
     await axios.get("https://cbr.ru/hd_base/infl/")
         .then(response => response.data)
         .then(data => {
@@ -137,7 +137,7 @@ async function fetchCbrfBases(){
                 let inflationTarget = row.cells[3].textContent // take value from cell 4
                 let rowName = "row" + i;
                 //
-                cbrfRates[rowName] = {
+                cbrfRateByMonth[rowName] = {
                     date,
                     cbrfRate
                 }
@@ -147,11 +147,12 @@ async function fetchCbrfBases(){
                     inflationRate,
                     inflationTarget
                 }
+
             }
 
         });
 }
 
-*/
+
 
 module.exports = service;

@@ -41,7 +41,7 @@ const cbrfMenu = Markup
     .keyboard([
         ['< Назад', 'Инфляция'],
         ['Курсы', 'Вся валюта'],
-        ['Ставка/месяцы', 'Ставка/неделя'],
+        ['Ставка/месяцы', 'Ставка по дням'],
         ['RUONIA (short)', 'RUONIA (full)']
     ])
     .oneTime()
@@ -69,6 +69,7 @@ bot.hears('< Назад', async (context) => {
     );
 });
 
+//+
 bot.hears('Курсы', async (context) => {
     //new
     let { Date, Currency } = await dataService.getFavoriteCurrency();
@@ -77,34 +78,48 @@ bot.hears('Курсы', async (context) => {
     context.reply(msg);
 });
 
+//+
 bot.hears('Вся валюта', async(context) => {
-    let { Date, Currency } = await dataService.getAllCurrency();
+    let { Date, Currency } = await dataService.getWholeCurrency();
     let title = "ЦБ РФ. Полный список (День +1)";
     let msg = Message.CurrencyRatesFromXML(Currency, Date, title);
     context.reply(msg);
 });
 
-bot.hears('Ставка/неделя', async (context) => {
-    let obj = await HtmlParser.CbrfRatePerWeek();
-    let msg = Message.CbrfRatePerWeek(obj);
+//++
+bot.hears('Ставка по дням', async (context) => {
+    let obj = await dataService.getCbrfRateForWeekByDay();
+    let msg = Message.CbrfRateForWeekByDay(obj);
     context.reply(msg);
 });
+//
 
-
+//+
 bot.hears('RUONIA (full)', async (context) => {
-    let ruonia = await HtmlParser.Ruonia("full");
+    let ruonia = await dataService.getRuoniaFull();
     let msg = Message.CbrfRuonia(ruonia);
     context.reply(msg);
 });
 
+//+
 bot.hears('RUONIA (short)', async (context) => {
-    let ruonia = await HtmlParser.Ruonia("short");
+    let ruonia = await dataService.getRuoniaShort();
     let msg = Message.CbrfRuonia(ruonia);
     context.reply(msg);
 });
 
 
+bot.hears('Ставка/месяцы', async (context) => {
+    let monthRate = await dataService.getCbrfRateByMonth();
+    let msg = Message.CbrfRateByMonth(monthRate);
+    context.reply(msg);
+});
 
+bot.hears('Инфляция', async (context) => {
+    let inflation = await dataService.getCbrfInflationByMonth();
+    let msg = Message.CbrfInflationByMonth(inflation);
+    context.reply(msg);
+});
 
 
 
