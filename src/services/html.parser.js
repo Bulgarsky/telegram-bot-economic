@@ -153,6 +153,4 @@ const CbrfBases = async () => {
         });
 }
 
-
-
 module.exports = service;

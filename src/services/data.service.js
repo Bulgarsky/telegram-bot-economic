@@ -41,7 +41,7 @@ service.getFavoriteCurrency = async () => {
 
 //LIMIT 100
 service.getCurrencyFromApi = async () => {
-    const data = await APILayer.fetchData();
+    return await APILayer.getData();
 }
 
 service.getCbrfRateByMonth = async  () => {

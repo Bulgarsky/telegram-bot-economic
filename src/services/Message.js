@@ -70,6 +70,14 @@ service.CurrencyRatesFromXML = (obj, date, title) => {
     return msg;
 }
 
+//CL Api: error message
+service.CurrencyLayerApiError = (code, info) => {
+    return `CurrencyLayer API Error Code: ${code}\n${info}`;
+}
 
+//CL Api: message
+service.CurrencyLayerMSG = () => {
+    //Доделать
+}
 
 module.exports = service;

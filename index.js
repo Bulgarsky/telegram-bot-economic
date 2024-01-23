@@ -1,19 +1,16 @@
 require("dotenv").config();
 const { Telegraf, Markup } = require('telegraf');
-const axios = require('axios');
-const { JSDOM } = require('jsdom');
 
 //use your telegram apikey (from @botfather) on .env or Here:
 const bot = new Telegraf(process.env.BOT_API_KEY);
 
 //new
 const dataService = require('./src/services/data.service.js');
+const apiCL = require('./src/api/apilayer.api');
 const Message = require('./src/services/Message.js');
-const Helpers = require('./src/services/Helpers.js');
-const HtmlParser = require('./src/services/html.parser.js');
+
 
 //
-
 bot.start((context) => {
     const userFirstName = context.update.message.from.first_name;
     context.reply(`Приветствую, ${userFirstName} для просмотра команд используйте:`);
@@ -86,7 +83,7 @@ bot.hears('Вся валюта', async(context) => {
     context.reply(msg);
 });
 
-//++
+//+
 bot.hears('Ставка по дням', async (context) => {
     let obj = await dataService.getCbrfRateForWeekByDay();
     let msg = Message.CbrfRateForWeekByDay(obj);
@@ -108,13 +105,14 @@ bot.hears('RUONIA (short)', async (context) => {
     context.reply(msg);
 });
 
-
+//+
 bot.hears('Ставка/месяцы', async (context) => {
     let monthRate = await dataService.getCbrfRateByMonth();
     let msg = Message.CbrfRateByMonth(monthRate);
     context.reply(msg);
 });
 
+//+
 bot.hears('Инфляция', async (context) => {
     let inflation = await dataService.getCbrfInflationByMonth();
     let msg = Message.CbrfInflationByMonth(inflation);
@@ -123,16 +121,33 @@ bot.hears('Инфляция', async (context) => {
 
 
 
-
-
-
-
-
 //Deprecated. READ ON apilayer.api.js
 //NEED FIX AFTER feb-01
 bot.hears('Курс валют от currencyLayer', async (context) => {
     context.reply("Deprecated");
+    let ApiResponse = await dataService.getCurrencyFromApi();
+    let success = ApiResponse.success;
+    switch (success){
+        case false:
+            let { error: { code, info } } = ApiResponse;
+            let errorMsg = Message.CurrencyLayerApiError(code, info);
+            context.reply(errorMsg);
+            break;
+        case true:
+            // console.log("ApiResponse.success/true: ", ApiResponse.success);
+            //ДОДЕЛАТЬ ПОСЛЕ 1го ФЕВРАЛЯ
+            let { Date, Currency } = apiCL.DataRepack(ApiResponse);
+            let title = "Курс валют от CurrencyLayer API";
+            //let msg =
+            context.reply("msg");
+            break;
+        default:
+            console.log("default switch on Курс валют от currencyLayer");
+            context.message("default switch on Курс валют от currencyLayer");
+    }
 });
+
+
 
 //no implement yet
 bot.hears('BRENT', (context) => {
